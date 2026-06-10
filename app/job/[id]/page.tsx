@@ -1,83 +1,14 @@
+import { getJobById, getAllJobs } from '@/lib/sanity'
+import { getJobTypeBadgeColor, getJobTypeLabel, formatDate } from '@/lib/utils'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 
-const jobsData: Record<string, any> = {
-  '1': {
-    id: '1',
-    title: 'Staff Nurse',
-    company: 'Guwahati Medical College',
-    location: 'Guwahati, Assam',
-    jobType: 'govt',
-    salary: 'Rs. 45,000 - 50,000',
-    experience: '2-5 years',
-    postedDate: '2024-06-08',
-    deadline: '2024-06-30',
-    description: 'Guwahati Medical College is recruiting experienced staff nurses for various departments.',
-    qualifications: 'B.Sc Nursing or equivalent qualification. 2-5 years of experience in a healthcare setting.',
-    responsibilities: `
-      • Provide patient care and maintain patient safety
-      • Administer medications and treatments as prescribed
-      • Monitor patient vital signs and report changes
-      • Maintain medical records and documentation
-      • Coordinate with medical team members
-      • Ensure infection control protocols are followed
-    `,
-    applicationLink: '#',
-  },
-  '2': {
-    id: '2',
-    title: 'Assistant Professor',
-    company: 'Dibrugarh University',
-    location: 'Dibrugarh, Assam',
-    jobType: 'govt',
-    salary: 'Rs. 55,000 - 65,000',
-    experience: '3-10 years',
-    postedDate: '2024-06-07',
-    deadline: '2024-06-25',
-    description: 'Dibrugarh University invites applications for Assistant Professor positions in the Department of Physics.',
-    qualifications: 'M.Sc Physics with Ph.D or pursuing Ph.D. Published research papers are a plus.',
-    responsibilities: `
-      • Teach undergraduate and postgraduate courses
-      • Conduct research and publish papers
-      • Guide student projects and thesis work
-      • Participate in academic committee meetings
-      • Contribute to curriculum development
-    `,
-    applicationLink: '#',
-  },
-}
+export const dynamic = 'force-dynamic'
 
-export default function JobDetailPage({ params }: { params: { id: string } }) {
-  const job = jobsData[params.id] || jobsData['1']
+export default async function JobDetailPage({ params }: { params: { id: string } }) {
+  const job = await getJobById(params.id).catch(() => null)
 
-  const getJobTypeColor = (type: string) => {
-    switch (type) {
-      case 'govt':
-        return 'bg-green-700'
-      case 'private':
-        return 'bg-blue-700'
-      case 'contract':
-        return 'bg-orange-700'
-      case 'walkin':
-        return 'bg-purple-700'
-      default:
-        return 'bg-gray-700'
-    }
-  }
-
-  const getJobTypeLabel = (type: string) => {
-    switch (type) {
-      case 'govt':
-        return 'Government'
-      case 'private':
-        return 'Private'
-      case 'contract':
-        return 'Contract'
-      case 'walkin':
-        return 'Walk-in'
-      default:
-        return type
-    }
-  }
+  if (!job) return notFound()
 
   return (
     <div className="bg-gray-50 min-h-screen py-8 px-4">
@@ -86,82 +17,87 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
           ← Back to All Jobs
         </Link>
 
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <div className="flex justify-between items-start mb-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+          {/* Header */}
+          <div className="flex justify-between items-start mb-6 gap-4">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">{job.title}</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-1">{job.title}</h1>
               <p className="text-xl text-gray-600">{job.company}</p>
             </div>
-            <span className={`${getJobTypeColor(job.jobType)} text-white font-bold px-4 py-2 rounded`}>
+            <span className={`${getJobTypeBadgeColor(job.jobType)} text-white font-bold px-4 py-2 rounded shrink-0`}>
               {getJobTypeLabel(job.jobType)}
             </span>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 pb-8 border-b border-gray-200">
+          {/* Meta Details */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 pb-6 border-b border-gray-200">
             <div>
-              <p className="text-gray-600 text-sm">Location</p>
-              <p className="text-gray-900 font-semibold">📍 {job.location}</p>
+              <p className="text-gray-500 text-xs uppercase mb-1">Location</p>
+              <p className="text-gray-900 font-semibold text-sm">📍 {job.location}</p>
             </div>
-            <div>
-              <p className="text-gray-600 text-sm">Salary</p>
-              <p className="text-gray-900 font-semibold">💰 {job.salary}</p>
-            </div>
-            <div>
-              <p className="text-gray-600 text-sm">Experience</p>
-              <p className="text-gray-900 font-semibold">{job.experience || 'Not specified'}</p>
-            </div>
-            <div>
-              <p className="text-gray-600 text-sm">Deadline</p>
-              <p className="text-gray-900 font-semibold">{new Date(job.deadline).toLocaleDateString()}</p>
-            </div>
+            {job.salary && (
+              <div>
+                <p className="text-gray-500 text-xs uppercase mb-1">Salary</p>
+                <p className="text-gray-900 font-semibold text-sm">💰 {job.salary}</p>
+              </div>
+            )}
+            {job.experience && (
+              <div>
+                <p className="text-gray-500 text-xs uppercase mb-1">Experience</p>
+                <p className="text-gray-900 font-semibold text-sm">{job.experience}</p>
+              </div>
+            )}
+            {job.deadline && (
+              <div>
+                <p className="text-gray-500 text-xs uppercase mb-1">Deadline</p>
+                <p className="text-gray-900 font-semibold text-sm">🗓 {formatDate(job.deadline)}</p>
+              </div>
+            )}
           </div>
 
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Job Description</h2>
-            <p className="text-gray-700 leading-relaxed mb-6">{job.description}</p>
-
-            <h3 className="text-xl font-bold text-gray-900 mb-3">Qualifications</h3>
-            <p className="text-gray-700 leading-relaxed mb-6">{job.qualifications}</p>
-
-            <h3 className="text-xl font-bold text-gray-900 mb-3">Responsibilities</h3>
-            <div className="text-gray-700 leading-relaxed whitespace-pre-line mb-8">
-              {job.responsibilities}
-            </div>
+          {/* Description */}
+          <div className="mb-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-3">Job Description</h2>
+            <p className="text-gray-700 leading-relaxed whitespace-pre-line">{job.description}</p>
           </div>
 
-          <div className="border-t border-gray-200 pt-8">
-            <p className="text-sm text-gray-600 mb-4">
-              Posted on: {new Date(job.postedDate).toLocaleDateString()}
+          {/* Qualifications */}
+          {job.qualifications && (
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-3">Qualifications</h2>
+              <p className="text-gray-700 leading-relaxed whitespace-pre-line">{job.qualifications}</p>
+            </div>
+          )}
+
+          {/* Footer */}
+          <div className="border-t border-gray-200 pt-6">
+            <p className="text-xs text-gray-400 mb-4">
+              Posted on: {formatDate(job.postedDate)}
+              {job.category && ` · Category: ${job.category}`}
             </p>
 
-            <div className="flex gap-4">
-              <button className="flex-1 bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-6 rounded transition">
-                Apply Now
-              </button>
-              <button className="flex-1 border-2 border-green-700 text-green-700 hover:bg-green-50 font-bold py-3 px-6 rounded transition">
-                Save Job
-              </button>
-              <button className="flex-1 border-2 border-gray-300 text-gray-700 hover:bg-gray-50 font-bold py-3 px-6 rounded transition">
-                Share
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Similar Jobs</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[1, 2, 3].map((item) => (
+            <div className="flex flex-col sm:flex-row gap-3">
+              {job.applicationLink ? (
+                <a
+                  href={job.applicationLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-6 rounded text-center transition"
+                >
+                  Apply Now →
+                </a>
+              ) : (
+                <button className="flex-1 bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-6 rounded transition">
+                  Apply Now
+                </button>
+              )}
               <Link
-                key={item}
                 href="/all-jobs"
-                className="bg-white p-6 rounded-lg hover:shadow-lg transition border border-gray-200"
+                className="flex-1 border-2 border-green-700 text-green-700 hover:bg-green-50 font-bold py-3 px-6 rounded text-center transition"
               >
-                <h3 className="font-bold text-gray-900 mb-2">Related Job Title {item}</h3>
-                <p className="text-gray-600 text-sm mb-3">Company Name</p>
-                <p className="text-green-700 font-semibold text-sm hover:text-green-800">View Job →</p>
+                Browse More Jobs
               </Link>
-            ))}
+            </div>
           </div>
         </div>
       </div>
