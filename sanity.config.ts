@@ -6,8 +6,8 @@ import {schemaTypes} from './studio/schemas'
 export default defineConfig({
   name: 'assam-job-alerts',
   title: 'Assam Job Alerts',
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '',
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  projectId: 'd9abxm70',
+  dataset: 'production',
   plugins: [structureTool(), visionTool()],
   schema: {
     types: schemaTypes,
