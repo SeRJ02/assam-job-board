@@ -1,64 +1,33 @@
-'use client'
-
+import { getJobsByType } from '@/lib/sanity'
 import JobCard from '@/components/JobCard'
 
-const privateJobs = [
-  {
-    id: '3',
-    title: 'Junior Engineer',
-    company: 'Associated Engineering Solutions',
-    location: 'Silchar, Assam',
-    jobType: 'private',
-    salary: 'Rs. 35,000 - 45,000',
-    postedDate: '2024-06-06',
-    description: 'Civil engineering graduate required for project work.',
-  },
-  {
-    id: '5',
-    title: 'Software Developer',
-    company: 'TechCorp India',
-    location: 'Guwahati, Assam',
-    jobType: 'private',
-    salary: 'Rs. 60,000 - 80,000',
-    postedDate: '2024-06-04',
-    description: 'Full stack developer needed for web application development.',
-  },
-  {
-    id: '7',
-    title: 'Marketing Executive',
-    company: 'Digital Solutions Ltd',
-    location: 'Assam',
-    jobType: 'private',
-    salary: 'Rs. 30,000 - 40,000',
-    postedDate: '2024-06-02',
-    description: 'Digital marketing professional needed for campaign management.',
-  },
-  {
-    id: '8',
-    title: 'Data Analyst',
-    company: 'Analytics India',
-    location: 'Guwahati, Assam',
-    jobType: 'private',
-    salary: 'Rs. 55,000 - 75,000',
-    postedDate: '2024-06-01',
-    description: 'Data analyst needed for business intelligence projects.',
-  },
-]
+export const revalidate = 60
 
-export default function PrivateJobsPage() {
+export default async function PrivateJobsPage() {
+  const jobs = await getJobsByType('private').catch(() => [])
+
   return (
     <div className="bg-gray-50 min-h-screen py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Private Jobs</h1>
-        <p className="text-gray-600 mb-8">
-          Latest private sector job opportunities in Assam with competitive salaries.
-        </p>
-
-        <div className="space-y-4">
-          {privateJobs.map((job) => (
-            <JobCard key={job.id} {...job} />
-          ))}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Private Jobs</h1>
+          <p className="text-gray-500">
+            Latest private sector job opportunities in Assam with competitive salaries.
+          </p>
         </div>
+
+        {jobs.length > 0 ? (
+          <div className="space-y-4">
+            {jobs.map((job) => (
+              <JobCard key={job._id} {...job} id={job._id} />
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white p-10 rounded-lg border border-dashed border-gray-300 text-center">
+            <p className="text-gray-400 text-lg">No private jobs posted yet.</p>
+            <p className="text-gray-400 text-sm mt-1">Check back soon or subscribe to get alerts.</p>
+          </div>
+        )}
       </div>
     </div>
   )
