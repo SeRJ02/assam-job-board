@@ -1,0 +1,165 @@
+/* ===== ALL JOBS CLIENT ===== */
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(16px, 4vw, 24px);
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: 260px 1fr;
+    gap: clamp(20px, 4vw, 32px);
+    align-items: start;
+  }
+}
+
+/* ===== SIDEBAR ===== */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 3vw, 16px);
+}
+
+.sidebarCard {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: clamp(14px, 3vw, 20px);
+}
+
+.sidebarTitle {
+  font-size: clamp(14px, 3vw, 15px);
+  font-weight: 700;
+  color: #111;
+  margin-bottom: clamp(10px, 2.5vw, 14px);
+}
+
+/* Mobile: sidebar is collapsible via details/summary */
+.filterToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  list-style: none;
+  padding: 0;
+}
+
+.filterToggle::-webkit-details-marker { display: none; }
+
+/* Search input */
+.searchInput {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
+  color: #333;
+  transition: border-color 0.2s ease;
+}
+
+.searchInput:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(30, 110, 65, 0.1);
+}
+
+.searchInput::placeholder { color: #aaa; }
+
+/* Checkbox list */
+.checkList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  min-height: 36px;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.checkText {
+  font-size: clamp(13px, 2.5vw, 14px);
+  color: var(--color-text-light);
+}
+
+/* Clear button */
+.clearBtn {
+  width: 100%;
+  min-height: 40px;
+  border: 2px solid #f87171;
+  background: transparent;
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: inherit;
+}
+
+.clearBtn:hover {
+  background-color: #fef2f2;
+}
+
+/* ===== JOB LIST ===== */
+
+.listArea {
+  min-width: 0;
+}
+
+.listMeta {
+  font-size: clamp(13px, 2.5vw, 14px);
+  color: var(--color-text-light);
+  margin-bottom: clamp(12px, 3vw, 16px);
+}
+
+.listMeta strong {
+  color: #111;
+}
+
+.jobList {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2.5vw, 14px);
+}
+
+/* Empty state */
+.empty {
+  background: white;
+  border: 2px dashed var(--color-border);
+  border-radius: 8px;
+  padding: clamp(32px, 8vw, 56px) clamp(16px, 4vw, 32px);
+  text-align: center;
+}
+
+.emptyText {
+  color: #9ca3af;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+.emptyLink {
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-decoration: underline;
+  font-family: inherit;
+}

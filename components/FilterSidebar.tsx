@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import styles from './FilterSidebar.module.css'
 
 interface Filters {
   jobTypes: string[]
@@ -12,6 +13,9 @@ interface FilterSidebarProps {
   onFilterChange: (filters: Filters) => void
 }
 
+const CATEGORIES = ['Engineering', 'Finance', 'Marketing', 'Sales', 'Healthcare', 'Education', 'IT', 'Other']
+const JOB_TYPES = ['Government', 'Private', 'Contract', 'Walk-in']
+
 export default function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
   const [filters, setFilters] = useState<Filters>({
     jobTypes: [],
@@ -19,69 +23,46 @@ export default function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
     salaryRange: [0, 1000000],
   })
 
-  const categories = [
-    'Engineering',
-    'Finance',
-    'Marketing',
-    'Sales',
-    'Healthcare',
-    'Education',
-    'IT',
-    'Other',
-  ]
-
-  const jobTypes = ['Government', 'Private', 'Contract', 'Walk-in']
-
-  const handleJobTypeChange = (type: string) => {
-    const updatedFilters = {
+  const toggle = (key: 'jobTypes' | 'categories', value: string) => {
+    const current = filters[key]
+    const updated: Filters = {
       ...filters,
-      jobTypes: filters.jobTypes.includes(type)
-        ? filters.jobTypes.filter((t) => t !== type)
-        : [...filters.jobTypes, type],
+      [key]: current.includes(value)
+        ? current.filter((v) => v !== value)
+        : [...current, value],
     }
-    setFilters(updatedFilters)
-    onFilterChange(updatedFilters)
-  }
-
-  const handleCategoryChange = (category: string) => {
-    const updatedFilters = {
-      ...filters,
-      categories: filters.categories.includes(category)
-        ? filters.categories.filter((c) => c !== category)
-        : [...filters.categories, category],
-    }
-    setFilters(updatedFilters)
-    onFilterChange(updatedFilters)
+    setFilters(updated)
+    onFilterChange(updated)
   }
 
   return (
-    <aside className="bg-gray-50 p-6 rounded-lg">
-      <h3 className="text-lg font-bold text-gray-900 mb-4">Browse by Category</h3>
-      <div className="space-y-2 mb-6">
-        {categories.map((category) => (
-          <label key={category} className="flex items-center gap-2 cursor-pointer">
+    <aside className={styles.sidebar}>
+      <h3 className={styles.sectionTitle}>Browse by Category</h3>
+      <div className={styles.checkGroup}>
+        {CATEGORIES.map((cat) => (
+          <label key={cat} className={styles.checkLabel}>
             <input
               type="checkbox"
-              checked={filters.categories.includes(category)}
-              onChange={() => handleCategoryChange(category)}
-              className="w-4 h-4 accent-green-700"
+              checked={filters.categories.includes(cat)}
+              onChange={() => toggle('categories', cat)}
+              className={styles.checkbox}
             />
-            <span className="text-sm text-gray-700">{category}</span>
+            <span className={styles.checkText}>{cat}</span>
           </label>
         ))}
       </div>
 
-      <h3 className="text-lg font-bold text-gray-900 mb-4">Job Type</h3>
-      <div className="space-y-2">
-        {jobTypes.map((type) => (
-          <label key={type} className="flex items-center gap-2 cursor-pointer">
+      <h3 className={styles.sectionTitle}>Job Type</h3>
+      <div className={styles.checkGroup}>
+        {JOB_TYPES.map((type) => (
+          <label key={type} className={styles.checkLabel}>
             <input
               type="checkbox"
               checked={filters.jobTypes.includes(type)}
-              onChange={() => handleJobTypeChange(type)}
-              className="w-4 h-4 accent-green-700"
+              onChange={() => toggle('jobTypes', type)}
+              className={styles.checkbox}
             />
-            <span className="text-sm text-gray-700">{type}</span>
+            <span className={styles.checkText}>{type}</span>
           </label>
         ))}
       </div>

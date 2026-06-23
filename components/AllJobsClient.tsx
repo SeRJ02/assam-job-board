@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react'
 import JobCard from '@/components/JobCard'
 import type { Job } from '@/lib/types'
+import styles from './AllJobsClient.module.css'
 
 const JOB_TYPE_OPTIONS = [
   { label: 'Government', value: 'govt' },
@@ -32,6 +33,14 @@ export default function AllJobsClient({ jobs }: { jobs: Job[] }) {
       prev.includes(value) ? prev.filter((c) => c !== value) : [...prev, value]
     )
 
+  const clearAll = () => {
+    setSelectedTypes([])
+    setSelectedCategories([])
+    setSearch('')
+  }
+
+  const hasFilters = selectedTypes.length > 0 || selectedCategories.length > 0 || search
+
   const filtered = useMemo(() => {
     return jobs.filter((job) => {
       if (selectedTypes.length > 0 && !selectedTypes.includes(job.jobType)) return false
@@ -49,93 +58,88 @@ export default function AllJobsClient({ jobs }: { jobs: Job[] }) {
   }, [jobs, selectedTypes, selectedCategories, search])
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <div className={styles.layout}>
+
       {/* Sidebar */}
-      <aside className="lg:col-span-1 space-y-6">
+      <aside className={styles.sidebar}>
         {/* Search */}
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
-          <h3 className="font-bold text-gray-900 mb-3">Search Jobs</h3>
+        <div className={styles.sidebarCard}>
+          <h3 className={styles.sidebarTitle}>Search Jobs</h3>
           <input
             type="text"
-            placeholder="Title, company, location..."
+            placeholder="Title, company, location…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm outline-none focus:border-green-600"
+            className={styles.searchInput}
+            aria-label="Search jobs"
           />
         </div>
 
-        {/* Job Type Filter */}
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
-          <h3 className="font-bold text-gray-900 mb-3">Job Type</h3>
-          <div className="space-y-2">
+        {/* Job Type */}
+        <div className={styles.sidebarCard}>
+          <h3 className={styles.sidebarTitle}>Job Type</h3>
+          <div className={styles.checkList}>
             {JOB_TYPE_OPTIONS.map(({ label, value }) => (
-              <label key={value} className="flex items-center gap-2 cursor-pointer">
+              <label key={value} className={styles.checkLabel}>
                 <input
                   type="checkbox"
                   checked={selectedTypes.includes(value)}
                   onChange={() => toggleType(value)}
-                  className="w-4 h-4 accent-green-700"
+                  className={styles.checkbox}
                 />
-                <span className="text-sm text-gray-700">{label}</span>
+                <span className={styles.checkText}>{label}</span>
               </label>
             ))}
           </div>
         </div>
 
-        {/* Category Filter */}
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
-          <h3 className="font-bold text-gray-900 mb-3">Category</h3>
-          <div className="space-y-2">
+        {/* Category */}
+        <div className={styles.sidebarCard}>
+          <h3 className={styles.sidebarTitle}>Category</h3>
+          <div className={styles.checkList}>
             {CATEGORY_OPTIONS.map((cat) => (
-              <label key={cat} className="flex items-center gap-2 cursor-pointer">
+              <label key={cat} className={styles.checkLabel}>
                 <input
                   type="checkbox"
                   checked={selectedCategories.includes(cat)}
                   onChange={() => toggleCategory(cat)}
-                  className="w-4 h-4 accent-green-700"
+                  className={styles.checkbox}
                 />
-                <span className="text-sm text-gray-700">{cat}</span>
+                <span className={styles.checkText}>{cat}</span>
               </label>
             ))}
           </div>
         </div>
 
-        {(selectedTypes.length > 0 || selectedCategories.length > 0 || search) && (
-          <button
-            onClick={() => { setSelectedTypes([]); setSelectedCategories([]); setSearch('') }}
-            className="w-full border-2 border-red-400 text-red-500 hover:bg-red-50 font-semibold py-2 rounded transition text-sm"
-          >
+        {hasFilters && (
+          <button className={styles.clearBtn} onClick={clearAll}>
             Clear All Filters
           </button>
         )}
       </aside>
 
       {/* Job List */}
-      <div className="lg:col-span-3">
-        <div className="flex justify-between items-center mb-4">
-          <p className="text-gray-600 text-sm">
-            Showing <strong>{filtered.length}</strong> of <strong>{jobs.length}</strong> jobs
-          </p>
-        </div>
+      <div className={styles.listArea}>
+        <p className={styles.listMeta}>
+          Showing <strong>{filtered.length}</strong> of <strong>{jobs.length}</strong> jobs
+        </p>
 
         {filtered.length > 0 ? (
-          <div className="space-y-4">
+          <div className={styles.jobList}>
             {filtered.map((job) => (
               <JobCard key={job._id} {...job} id={job._id} />
             ))}
           </div>
         ) : (
-          <div className="bg-white p-10 rounded-lg border border-dashed border-gray-300 text-center">
-            <p className="text-gray-500">No jobs match your filters.</p>
-            <button
-              onClick={() => { setSelectedTypes([]); setSelectedCategories([]); setSearch('') }}
-              className="mt-3 text-green-700 font-semibold hover:underline text-sm"
-            >
+          <div className={styles.empty}>
+            <p className={styles.emptyText}>No jobs match your filters.</p>
+            <button className={styles.emptyLink} onClick={clearAll}>
               Clear filters
             </button>
           </div>
         )}
       </div>
+
     </div>
   )
 }

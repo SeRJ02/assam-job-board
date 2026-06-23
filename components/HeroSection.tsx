@@ -2,6 +2,9 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import styles from './HeroSection.module.css'
+
+const TRENDING = ['APSC', 'Police', 'Walk-in Interviews']
 
 export default function HeroSection() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -11,11 +14,11 @@ export default function HeroSection() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    if (searchQuery.trim()) {
-      router.push(`/all-jobs?search=${encodeURIComponent(searchQuery)}`)
-    } else {
-      router.push('/all-jobs')
-    }
+    router.push(
+      searchQuery.trim()
+        ? `/all-jobs?search=${encodeURIComponent(searchQuery)}`
+        : '/all-jobs'
+    )
   }
 
   const handleSubscribe = async (e: React.FormEvent) => {
@@ -40,82 +43,84 @@ export default function HeroSection() {
   }
 
   return (
-    <section className="bg-green-800 text-white py-20 px-4">
-      <div className="max-w-4xl mx-auto text-center">
-        <h1 className="text-5xl font-bold mb-3 leading-tight">
-          Assam's Most Trusted
-        </h1>
-        <h2 className="text-5xl font-bold mb-6 leading-tight">
-          <span className="text-yellow-400 italic font-serif">Job Alert</span>{' '}
-          <span>Network</span>
-        </h2>
+    <section className={styles.hero}>
+      <div className={styles.container}>
 
-        <p className="text-lg text-gray-200 mb-10 max-w-2xl mx-auto">
-          Daily updates on government, private, and contract roles across Northeast India. Find your next opportunity today.
-        </p>
+        {/* Heading */}
+        <div className={styles.content}>
+          <h1 className={styles.title}>Assam's Most Trusted</h1>
+          <h2 className={styles.subtitle}>
+            <span className={styles.accentText}>Job Alert</span> Network
+          </h2>
+          <p className={styles.description}>
+            Daily updates on government, private, and contract roles across Northeast India.
+            Find your next opportunity today.
+          </p>
+        </div>
 
         {/* Search */}
-        <form onSubmit={handleSearch} className="mb-6">
-          <div className="bg-white rounded-lg shadow-lg flex gap-0 max-w-2xl mx-auto overflow-hidden">
-            <span className="pl-4 flex items-center text-gray-400">🔍</span>
+        <form className={styles.searchForm} onSubmit={handleSearch}>
+          <div className={styles.searchBar}>
+            <span className={styles.searchIcon} aria-hidden="true">🔍</span>
             <input
-              type="text"
+              type="search"
               placeholder="Search for jobs, skills, or companies..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 px-3 py-4 outline-none text-gray-700 text-base"
+              className={styles.searchInput}
+              aria-label="Search for jobs"
             />
-            <button
-              type="submit"
-              className="bg-yellow-500 hover:bg-yellow-400 text-green-900 font-bold px-8 py-4 transition"
-            >
+            <button type="submit" className={styles.searchButton}>
               Find Jobs
             </button>
           </div>
         </form>
 
         {/* Trending */}
-        <div className="flex gap-3 justify-center flex-wrap items-center mb-10">
-          <span className="text-sm text-gray-300">Trending:</span>
-          {['APSC', 'Police', 'Walk-in Interviews'].map((tag) => (
+        <div className={styles.trending}>
+          <span className={styles.trendingLabel}>Trending:</span>
+          {TRENDING.map((tag) => (
             <button
               key={tag}
+              type="button"
+              className={styles.trendingPill}
               onClick={() => router.push(`/all-jobs?search=${encodeURIComponent(tag)}`)}
-              className="bg-green-700 hover:bg-green-600 border border-green-600 px-4 py-1.5 rounded-full text-sm transition"
             >
               {tag}
             </button>
           ))}
         </div>
 
-        {/* Quick Subscribe */}
-        <form onSubmit={handleSubscribe} className="max-w-md mx-auto">
+        {/* Subscribe */}
+        <form className={styles.subscribeForm} onSubmit={handleSubscribe}>
           {subscribeStatus === 'success' ? (
-            <p className="text-yellow-400 font-semibold">✅ You're subscribed! You'll receive daily job alerts.</p>
+            <p className={styles.successMsg}>✅ You're subscribed! You'll receive daily job alerts.</p>
           ) : (
             <>
-              <div className="flex gap-2">
+              <div className={styles.subscribeRow}>
                 <input
                   type="email"
                   placeholder="Get daily alerts — enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 px-4 py-2.5 rounded text-gray-900 outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
+                  className={styles.subscribeInput}
+                  aria-label="Email address for job alerts"
                 />
                 <button
                   type="submit"
                   disabled={subscribeStatus === 'loading'}
-                  className="bg-yellow-500 hover:bg-yellow-400 disabled:opacity-60 text-green-900 font-bold px-5 py-2.5 rounded transition text-sm"
+                  className={styles.subscribeButton}
                 >
-                  {subscribeStatus === 'loading' ? '...' : 'Subscribe'}
+                  {subscribeStatus === 'loading' ? '…' : 'Subscribe'}
                 </button>
               </div>
               {subscribeStatus === 'error' && (
-                <p className="text-red-300 text-xs mt-2">Failed to subscribe. Please try again.</p>
+                <p className={styles.errorMsg}>Failed to subscribe. Please try again.</p>
               )}
             </>
           )}
         </form>
+
       </div>
     </section>
   )

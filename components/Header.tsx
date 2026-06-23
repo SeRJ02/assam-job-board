@@ -1,30 +1,73 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
+import styles from './Header.module.css'
 
 export default function Header() {
-  return (
-    <header className="bg-green-800 text-white sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-bold text-2xl">
-          <div className="bg-yellow-500 text-green-800 px-2 py-1 rounded font-bold">🏢</div>
-          <span>Assam Job Alerts</span>
-        </Link>
+  const [menuOpen, setMenuOpen] = useState(false)
 
-        <nav className="hidden md:flex gap-6">
-          <Link href="/" className="hover:text-yellow-400 transition">Home</Link>
-          <Link href="/all-jobs" className="hover:text-yellow-400 transition">All Jobs</Link>
-          <Link href="/govt-jobs" className="hover:text-yellow-400 transition">Govt Jobs</Link>
-          <Link href="/private-jobs" className="hover:text-yellow-400 transition">Private Jobs</Link>
-          <Link href="/walk-ins" className="hover:text-yellow-400 transition">Walk-ins</Link>
+  const closeMenu = () => setMenuOpen(false)
+
+  return (
+    <header className={styles.navbar}>
+      <div className={styles.navbarContainer}>
+
+        {/* Logo + Hamburger */}
+        <div className={styles.navbarBrand}>
+          <Link href="/" className={styles.logo}>
+            <div className={styles.logoIcon}>🏢</div>
+            <span className={styles.logoText}>Assam Job Alerts</span>
+          </Link>
+
+          <button
+            className={`${styles.hamburgerMenu} ${menuOpen ? styles.active : ''}`}
+            onClick={() => setMenuOpen((prev) => !prev)}
+            aria-label="Toggle navigation menu"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
+
+        {/* Desktop Navigation */}
+        <nav className={styles.navbarNav} aria-label="Main navigation">
+          <Link href="/" className={styles.navLink}>Home</Link>
+          <Link href="/all-jobs" className={styles.navLink}>All Jobs</Link>
+          <Link href="/govt-jobs" className={styles.navLink}>Govt Jobs</Link>
+          <Link href="/private-jobs" className={styles.navLink}>Private Jobs</Link>
+          <Link href="/walk-ins" className={styles.navLink}>Walk-ins</Link>
         </nav>
 
-        <div className="flex items-center gap-2 bg-white rounded px-3 py-2 text-gray-700">
-          <span>🔍</span>
+        {/* Desktop Search */}
+        <div className={styles.navbarSearch}>
           <input
-            type="text"
+            type="search"
             placeholder="Search jobs..."
-            className="outline-none text-sm w-40"
+            className={styles.searchInput}
+            aria-label="Search jobs"
           />
         </div>
+
+        {/* Mobile Menu */}
+        {menuOpen && (
+          <nav
+            id="mobile-menu"
+            className={styles.mobileMenu}
+            role="navigation"
+            aria-label="Mobile navigation"
+          >
+            <Link href="/" className={styles.mobileMenuLink} onClick={closeMenu}>Home</Link>
+            <Link href="/all-jobs" className={styles.mobileMenuLink} onClick={closeMenu}>All Jobs</Link>
+            <Link href="/govt-jobs" className={styles.mobileMenuLink} onClick={closeMenu}>Govt Jobs</Link>
+            <Link href="/private-jobs" className={styles.mobileMenuLink} onClick={closeMenu}>Private Jobs</Link>
+            <Link href="/walk-ins" className={styles.mobileMenuLink} onClick={closeMenu}>Walk-ins</Link>
+          </nav>
+        )}
+
       </div>
     </header>
   )
