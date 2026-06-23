@@ -1,5 +1,6 @@
 import { createClient } from '@sanity/client'
-import type { Job, JobStats, JobAlert } from './types'
+import { createImageUrlBuilder } from '@sanity/image-url'
+import type { Job, JobStats, JobAlert, SanityImage } from './types'
 
 const projectId = 'd9abxm70'
 const dataset = 'production'
@@ -20,6 +21,22 @@ export const writeClient = createClient({
   token: process.env.SANITY_API_TOKEN,
 })
 
+const builder = createImageUrlBuilder(client)
+
+export function urlForImage(source: SanityImage): string {
+  return builder.image(source).auto('format').url()
+}
+
+export function urlForImageWithDimensions(
+  source: SanityImage,
+  width: number,
+  height?: number
+): string {
+  let img = builder.image(source).auto('format').width(width)
+  if (height) img = img.height(height)
+  return img.url()
+}
+
 const jobFields = `
   _id,
   title,
@@ -30,7 +47,9 @@ const jobFields = `
   postedDate,
   description,
   featured,
-  category
+  category,
+  companyLogo,
+  jobBanner
 `
 
 export async function getFeaturedJobs(): Promise<Job[]> {
@@ -66,7 +85,7 @@ export async function getJobById(id: string): Promise<Job | null> {
     `*[_type == "job" && _id == $id][0] {
       _id, title, company, location, jobType, salary, experience,
       postedDate, deadline, description, qualifications, applicationLink,
-      category, featured
+      category, featured, companyLogo, jobBanner
     }`,
     { id }
   )
@@ -98,7 +117,8 @@ export async function searchJobs(query: string): Promise<Job[]> {
       company match "${q}" ||
       location match "${q}"
     )] | order(postedDate desc) [0...20] {
-      _id, title, company, location, jobType, salary, postedDate, description, featured, category
+      _id, title, company, location, jobType, salary, postedDate, description, featured, category,
+      companyLogo, jobBanner
     }`
   )
 }

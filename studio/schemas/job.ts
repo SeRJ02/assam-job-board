@@ -16,6 +16,26 @@ export default {
       validation: (Rule: any) => Rule.required(),
     },
     {
+      name: 'companyLogo',
+      title: 'Company Logo',
+      type: 'image',
+      description: 'Optional. PNG, JPG, JPEG, or WEBP.',
+      options: {
+        hotspot: true,
+        accept: 'image/png,image/jpeg,image/webp',
+      },
+    },
+    {
+      name: 'jobBanner',
+      title: 'Job Banner Image',
+      type: 'image',
+      description: 'Optional header/banner image for this job post. PNG, JPG, JPEG, or WEBP.',
+      options: {
+        hotspot: true,
+        accept: 'image/png,image/jpeg,image/webp',
+      },
+    },
+    {
       name: 'location',
       title: 'Location',
       type: 'string',
@@ -83,6 +103,7 @@ export default {
       title: 'Posted Date',
       type: 'datetime',
       validation: (Rule: any) => Rule.required(),
+      initialValue: () => new Date().toISOString(),
     },
     {
       name: 'deadline',
@@ -101,12 +122,14 @@ export default {
       title: 'title',
       company: 'company',
       jobType: 'jobType',
+      media: 'companyLogo',
     },
     prepare(selection: any) {
-      const { title, company, jobType } = selection
+      const { title, company, jobType, media } = selection
       return {
         title: title,
         subtitle: `${company} - ${jobType}`,
+        media,
       }
     },
   },

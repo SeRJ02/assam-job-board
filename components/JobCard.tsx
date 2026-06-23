@@ -1,4 +1,7 @@
 import Link from 'next/link'
+import Image from 'next/image'
+import { urlForImageWithDimensions } from '@/lib/sanity'
+import type { SanityImage } from '@/lib/types'
 
 interface JobCardProps {
   id: string
@@ -9,6 +12,9 @@ interface JobCardProps {
   salary?: string
   postedDate: string
   description?: string
+  companyLogo?: SanityImage
+  // jobBanner is not displayed on the card, only on the detail page
+  jobBanner?: SanityImage
 }
 
 export default function JobCard({
@@ -20,6 +26,7 @@ export default function JobCard({
   salary,
   postedDate,
   description,
+  companyLogo,
 }: JobCardProps) {
   const getJobTypeColor = (type: string) => {
     switch (type) {
@@ -51,14 +58,29 @@ export default function JobCard({
     }
   }
 
+  const logoUrl = companyLogo ? urlForImageWithDimensions(companyLogo, 80, 80) : null
+
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition">
       <div className="flex justify-between items-start mb-4">
-        <div className="flex-1">
-          <h3 className="text-lg font-bold text-gray-900 mb-1">{title}</h3>
-          <p className="text-gray-600 text-sm">{company}</p>
+        <div className="flex items-start gap-3 flex-1">
+          {logoUrl && (
+            <div className="shrink-0 w-10 h-10 rounded border border-gray-100 overflow-hidden bg-gray-50">
+              <Image
+                src={logoUrl}
+                alt={`${company} logo`}
+                width={40}
+                height={40}
+                className="object-contain w-full h-full"
+              />
+            </div>
+          )}
+          <div>
+            <h3 className="text-lg font-bold text-gray-900 mb-1">{title}</h3>
+            <p className="text-gray-600 text-sm">{company}</p>
+          </div>
         </div>
-        <span className={`${getJobTypeColor(jobType)} text-white text-xs font-bold px-3 py-1 rounded`}>
+        <span className={`${getJobTypeColor(jobType)} text-white text-xs font-bold px-3 py-1 rounded shrink-0`}>
           {getJobTypeLabel(jobType)}
         </span>
       </div>
