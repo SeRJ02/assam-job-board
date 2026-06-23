@@ -64,19 +64,8 @@ export default {
     {
       name: 'category',
       title: 'Category',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Engineering', value: 'engineering' },
-          { title: 'Finance', value: 'finance' },
-          { title: 'Marketing', value: 'marketing' },
-          { title: 'Sales', value: 'sales' },
-          { title: 'Healthcare', value: 'healthcare' },
-          { title: 'Education', value: 'education' },
-          { title: 'IT', value: 'it' },
-          { title: 'Other', value: 'other' },
-        ],
-      },
+      type: 'reference',
+      to: [{ type: 'category' }],
     },
     {
       name: 'salary',

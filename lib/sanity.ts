@@ -47,7 +47,7 @@ const jobFields = `
   postedDate,
   description,
   featured,
-  category,
+  "category": category->title,
   companyLogo,
   jobBanner
 `
@@ -85,7 +85,7 @@ export async function getJobById(id: string): Promise<Job | null> {
     `*[_type == "job" && _id == $id][0] {
       _id, title, company, location, jobType, salary, experience,
       postedDate, deadline, description, qualifications, applicationLink,
-      category, featured, companyLogo, jobBanner
+      "category": category->title, featured, companyLogo, jobBanner
     }`,
     { id }
   )
@@ -117,8 +117,8 @@ export async function searchJobs(query: string): Promise<Job[]> {
       company match "${q}" ||
       location match "${q}"
     )] | order(postedDate desc) [0...20] {
-      _id, title, company, location, jobType, salary, postedDate, description, featured, category,
-      companyLogo, jobBanner
+      _id, title, company, location, jobType, salary, postedDate, description, featured,
+      "category": category->title, companyLogo, jobBanner
     }`
   )
 }
