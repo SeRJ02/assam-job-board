@@ -44,14 +44,21 @@ export default function HeroSection() {
 
   return (
     <section className={styles.hero}>
-      <div className={styles.container}>
+      {/* SVG wave at bottom */}
+      <div className={styles.wave} aria-hidden="true">
+        <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <path
+            d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z"
+            fill="rgba(255,255,255,0.08)"
+          />
+        </svg>
+      </div>
 
-        {/* Heading */}
+      <div className={styles.container}>
         <div className={styles.content}>
-          <h1 className={styles.title}>Assam's Most Trusted</h1>
-          <h2 className={styles.subtitle}>
-            <span className={styles.accentText}>Job Alert</span> Network
-          </h2>
+          <h1 className={styles.title}>
+            Assam&apos;s Most Trusted Job Alert Network
+          </h1>
           <p className={styles.description}>
             Daily updates on government, private, and contract roles across Northeast India.
             Find your next opportunity today.
@@ -61,7 +68,6 @@ export default function HeroSection() {
         {/* Search */}
         <form className={styles.searchForm} onSubmit={handleSearch}>
           <div className={styles.searchBar}>
-            <span className={styles.searchIcon} aria-hidden="true">🔍</span>
             <input
               type="search"
               placeholder="Search for jobs, skills, or companies..."
@@ -71,14 +77,14 @@ export default function HeroSection() {
               aria-label="Search for jobs"
             />
             <button type="submit" className={styles.searchButton}>
-              Find Jobs
+              Search Jobs
             </button>
           </div>
         </form>
 
         {/* Trending */}
         <div className={styles.trending}>
-          <span className={styles.trendingLabel}>Trending:</span>
+          <span className={styles.trendingLabel}>TRENDING:</span>
           {TRENDING.map((tag) => (
             <button
               key={tag}
@@ -94,7 +100,7 @@ export default function HeroSection() {
         {/* Subscribe */}
         <form className={styles.subscribeForm} onSubmit={handleSubscribe}>
           {subscribeStatus === 'success' ? (
-            <p className={styles.successMsg}>✅ You're subscribed! You'll receive daily job alerts.</p>
+            <p className={styles.successMsg}>You&apos;re subscribed! You&apos;ll receive daily job alerts.</p>
           ) : (
             <>
               <div className={styles.subscribeRow}>
@@ -120,7 +126,6 @@ export default function HeroSection() {
             </>
           )}
         </form>
-
       </div>
     </section>
   )

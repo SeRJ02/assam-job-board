@@ -22,13 +22,15 @@ export default function StatsSection({ stats }: StatsSectionProps) {
 
   return (
     <section className={styles.section} aria-label="Job statistics">
-      <div className={styles.grid}>
-        {items.map((stat) => (
-          <div key={stat.id} className={styles.card}>
-            <div className={styles.number}>{stat.number}</div>
-            <div className={styles.label}>{stat.label}</div>
-          </div>
-        ))}
+      <div className={styles.container}>
+        <div className={styles.grid}>
+          {items.map((stat) => (
+            <div key={stat.id} className={styles.card}>
+              <div className={styles.number}>{stat.number}</div>
+              <div className={styles.label}>{stat.label}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )

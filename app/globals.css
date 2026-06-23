@@ -3,22 +3,47 @@
 /* ===== COLOR SYSTEM ===== */
 
 :root {
-  --color-primary: #1e6e41;
-  --color-primary-dark: #165d35;
-  --color-primary-light: #2d8a52;
-  --color-accent: #ffc107;
-  --color-accent-dark: #ffb300;
-  --color-danger: #dc3545;
-  --color-success: #28a745;
-  --color-warning: #ffc107;
-  --color-info: #17a2b8;
-  --color-text: #333333;
+  --color-primary: #1B7F4A;
+  --color-primary-dark: #146436;
+  --color-primary-light: #4CAF7F;
+  --color-bg-light: #E8F5E9;
+  --color-bg-section: #F5F5F5;
+  --color-accent: #FFC107;
+  --color-accent-dark: #FFB300;
+  --color-text: #1A1A1A;
   --color-text-light: #666666;
-  --color-text-lighter: #999999;
-  --color-bg: #ffffff;
-  --color-bg-light: #f9f9f9;
-  --color-border: #dddddd;
-  --color-shadow: rgba(0, 0, 0, 0.1);
+  --color-border: #E0E0E0;
+  --color-white: #FFFFFF;
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+/* ===== BOX SIZING ===== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* ===== BASE ===== */
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-white);
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
 }
 
 /* ===== ACCESSIBILITY UTILITY ===== */

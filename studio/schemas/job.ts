@@ -7,13 +7,11 @@ export default {
       name: 'title',
       title: 'Job Title',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'company',
       title: 'Company/Organization',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'companyLogo',
@@ -39,13 +37,11 @@ export default {
       name: 'location',
       title: 'Location',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'description',
       title: 'Job Description',
       type: 'text',
-      validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'jobType',
@@ -59,7 +55,6 @@ export default {
           { title: 'Walk-in', value: 'walkin' },
         ],
       },
-      validation: (Rule: any) => Rule.required(),
     },
     {
       name: 'category',
@@ -91,7 +86,6 @@ export default {
       name: 'postedDate',
       title: 'Posted Date',
       type: 'datetime',
-      validation: (Rule: any) => Rule.required(),
       initialValue: () => new Date().toISOString(),
     },
     {

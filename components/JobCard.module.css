@@ -2,40 +2,31 @@
 
 .card {
   background: white;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: clamp(16px, 4vw, 24px);
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  border: 1px solid #E0E0E0;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
 }
 
 .card:hover {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.09);
-  border-color: #bbb;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* ===== CARD HEADER ===== */
+/* ===== HEADER: logo + badge ===== */
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.companyInfo {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  flex: 1;
-  min-width: 0;
 }
 
 .logoWrapper {
   width: 40px;
   height: 40px;
-  border-radius: 6px;
-  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  border: 1px solid #E0E0E0;
   overflow: hidden;
   background: #f9f9f9;
   flex-shrink: 0;
@@ -50,76 +41,98 @@
   height: 100%;
 }
 
-.titleGroup {
-  min-width: 0;
-}
-
-.title {
-  font-size: clamp(15px, 3vw, 17px);
+.logoPlaceholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: #1B7F4A;
+  color: white;
+  font-family: var(--font-heading);
+  font-size: 18px;
   font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 3px;
-  line-height: 1.3;
-}
-
-.company {
-  font-size: clamp(13px, 2.5vw, 14px);
-  color: var(--color-text-light);
-  line-height: 1.3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 /* ===== BADGE ===== */
 
 .badge {
-  font-size: 12px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 4px;
-  color: white;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
   white-space: nowrap;
   flex-shrink: 0;
-  line-height: 1.4;
-  /* override any global button/link resets */
-  min-height: unset;
-  min-width: unset;
   display: inline-block;
+  line-height: 1.4;
 }
 
-.badgeGovt    { background-color: #1e6e41; }
-.badgePrivate { background-color: #1d4ed8; }
-.badgeContract{ background-color: #c05621; }
-.badgeWalkin  { background-color: #6b21a8; }
-.badgeDefault { background-color: #4b5563; }
+.badgeGovt    { background: #E8F5E9; color: #1B7F4A; }
+.badgePrivate { background: #E3F2FD; color: #1565C0; }
+.badgeContract{ background: #FFF3E0; color: #E65100; }
+.badgeWalkin  { background: #F3E5F5; color: #6A1B9A; }
+.badgeDefault { background: #F5F5F5; color: #666666; }
 
-/* ===== META ===== */
+/* ===== TITLE GROUP ===== */
+
+.titleGroup {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin-top: 0;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.company {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #666666;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ===== META ROW ===== */
 
 .meta {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
-  font-size: clamp(13px, 2.5vw, 14px);
-  color: #555;
-  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 12px;
 }
 
 .metaItem {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #666666;
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.date {
-  font-size: 12px;
-  color: var(--color-text-lighter);
+.salary {
+  color: #1B7F4A;
+  font-weight: 600;
 }
 
 /* ===== DESCRIPTION ===== */
 
 .description {
-  font-size: clamp(13px, 2.5vw, 14px);
-  color: #555;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #666666;
   line-height: 1.55;
-  margin-bottom: 16px;
+  margin-top: 8px;
+  margin-bottom: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -131,17 +144,21 @@
 .actions {
   display: flex;
   gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #F0F0F0;
 }
 
 .btnPrimary {
   flex: 1;
-  background: var(--color-primary);
+  background: #1B7F4A;
   color: white;
-  font-weight: 700;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 500;
   border: none;
-  border-radius: 4px;
-  padding: clamp(10px, 2vw, 12px) clamp(12px, 3vw, 16px);
-  font-size: clamp(13px, 2.5vw, 14px);
+  border-radius: 8px;
+  padding: 10px 20px;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
@@ -149,50 +166,50 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  font-family: inherit;
+  min-height: 40px;
 }
 
 .btnPrimary:hover {
-  background-color: var(--color-primary-dark);
+  background-color: #146436;
 }
 
 .btnPrimary:focus-visible {
-  outline: 3px solid #ffc107;
+  outline: 3px solid #FFC107;
   outline-offset: 2px;
 }
 
 .btnSecondary {
-  flex: 1;
-  background: transparent;
-  color: var(--color-primary);
-  font-weight: 700;
-  border: 2px solid var(--color-primary);
-  border-radius: 4px;
-  padding: clamp(10px, 2vw, 12px) clamp(12px, 3vw, 16px);
-  font-size: clamp(13px, 2.5vw, 14px);
+  background: white;
+  color: #666666;
+  font-family: var(--font-body);
+  font-size: 13px;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  padding: 10px 16px;
   cursor: pointer;
-  text-align: center;
-  transition: background-color 0.2s ease;
-  min-height: 44px;
+  transition: border-color 0.2s ease, color 0.2s ease;
+  min-height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: inherit;
 }
 
 .btnSecondary:hover {
-  background-color: #f0fdf4;
+  border-color: #1B7F4A;
+  color: #1B7F4A;
 }
 
 .btnSecondary:focus-visible {
-  outline: 3px solid var(--color-primary);
+  outline: 3px solid #1B7F4A;
   outline-offset: 2px;
 }
 
-@media (min-width: 768px) {
-  .logoWrapper {
-    width: 48px;
-    height: 48px;
-  }
+/* ===== DATE ===== */
+
+.date {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: #999999;
+  margin-top: 8px;
+  margin-bottom: 0;
 }

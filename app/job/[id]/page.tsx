@@ -1,137 +1,218 @@
-import { getJobById } from '@/lib/sanity'
-import { urlForImage, urlForImageWithDimensions } from '@/lib/sanity'
-import { getJobTypeBadgeColor, getJobTypeLabel, formatDate } from '@/lib/utils'
+import { getJobById, urlForImage, urlForImageWithDimensions } from '@/lib/sanity'
+import { getJobTypeLabel, formatDate } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import styles from './JobDetail.module.css'
 
 export const dynamic = 'force-dynamic'
 
+function getJobTypeBadgeStyle(jobType: string): { bg: string; color: string; label: string } {
+  switch (jobType) {
+    case 'govt':     return { bg: '#E8F5E9', color: '#1B7F4A', label: 'Government' }
+    case 'private':  return { bg: '#E3F2FD', color: '#1565C0', label: 'Private' }
+    case 'contract': return { bg: '#FFF3E0', color: '#E65100', label: 'Contract' }
+    case 'walkin':   return { bg: '#F3E5F5', color: '#6A1B9A', label: 'Walk-in' }
+    default:         return { bg: '#F5F5F5', color: '#666666', label: jobType }
+  }
+}
+
 export default async function JobDetailPage({ params }: { params: { id: string } }) {
   const job = await getJobById(params.id).catch(() => null)
-
   if (!job) return notFound()
 
   const bannerUrl = job.jobBanner ? urlForImage(job.jobBanner) : null
   const logoUrl = job.companyLogo ? urlForImageWithDimensions(job.companyLogo, 96, 96) : null
+  const badge = getJobTypeBadgeStyle(job.jobType)
 
   return (
-    <div className="bg-gray-50 min-h-screen py-8 px-4">
-      <div className="max-w-4xl mx-auto">
-        <Link href="/all-jobs" className="text-green-700 font-semibold hover:text-green-800 mb-6 inline-block">
-          ← Back to All Jobs
-        </Link>
+    <div className={styles.page}>
+      <div className={styles.container}>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-          {/* Banner Image */}
-          {bannerUrl && (
-            <div className="relative w-full h-52 sm:h-64 bg-gray-100">
-              <Image
-                src={bannerUrl}
-                alt={`${job.title} banner`}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-          )}
+        {/* Breadcrumb */}
+        <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+          <Link href="/" className={styles.breadcrumbLink}>Home</Link>
+          <span className={styles.breadcrumbSep}>/</span>
+          <Link href="/all-jobs" className={styles.breadcrumbLink}>All Jobs</Link>
+          <span className={styles.breadcrumbSep}>/</span>
+          <span className={styles.breadcrumbCurrent}>{job.title}</span>
+        </nav>
 
-          <div className="p-8">
-            {/* Header */}
-            <div className="flex justify-between items-start mb-6 gap-4">
-              <div className="flex items-start gap-4">
-                {logoUrl && (
-                  <div className="shrink-0 w-16 h-16 rounded-lg border border-gray-200 overflow-hidden bg-gray-50 flex items-center justify-center">
-                    <Image
-                      src={logoUrl}
-                      alt={`${job.company} logo`}
-                      width={64}
-                      height={64}
-                      className="object-contain w-full h-full"
-                    />
-                  </div>
-                )}
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900 mb-1">{job.title}</h1>
-                  <p className="text-xl text-gray-600">{job.company}</p>
-                </div>
-              </div>
-              <span className={`${getJobTypeBadgeColor(job.jobType)} text-white font-bold px-4 py-2 rounded shrink-0`}>
-                {getJobTypeLabel(job.jobType)}
-              </span>
-            </div>
-
-            {/* Meta Details */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 pb-6 border-b border-gray-200">
-              <div>
-                <p className="text-gray-500 text-xs uppercase mb-1">Location</p>
-                <p className="text-gray-900 font-semibold text-sm">📍 {job.location}</p>
-              </div>
-              {job.salary && (
-                <div>
-                  <p className="text-gray-500 text-xs uppercase mb-1">Salary</p>
-                  <p className="text-gray-900 font-semibold text-sm">💰 {job.salary}</p>
-                </div>
-              )}
-              {job.experience && (
-                <div>
-                  <p className="text-gray-500 text-xs uppercase mb-1">Experience</p>
-                  <p className="text-gray-900 font-semibold text-sm">{job.experience}</p>
-                </div>
-              )}
-              {job.deadline && (
-                <div>
-                  <p className="text-gray-500 text-xs uppercase mb-1">Deadline</p>
-                  <p className="text-gray-900 font-semibold text-sm">🗓 {formatDate(job.deadline)}</p>
-                </div>
-              )}
-            </div>
-
-            {/* Description */}
-            <div className="mb-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-3">Job Description</h2>
-              <p className="text-gray-700 leading-relaxed whitespace-pre-line">{job.description}</p>
-            </div>
-
-            {/* Qualifications */}
-            {job.qualifications && (
-              <div className="mb-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-3">Qualifications</h2>
-                <p className="text-gray-700 leading-relaxed whitespace-pre-line">{job.qualifications}</p>
+        <div className={styles.layout}>
+          {/* Main Content */}
+          <main className={styles.main}>
+            {/* Banner */}
+            {bannerUrl && (
+              <div className={styles.bannerWrapper}>
+                <Image
+                  src={bannerUrl}
+                  alt={`${job.title} banner`}
+                  fill
+                  className={styles.bannerImg}
+                  priority
+                />
               </div>
             )}
 
-            {/* Footer */}
-            <div className="border-t border-gray-200 pt-6">
-              <p className="text-xs text-gray-400 mb-4">
-                Posted on: {formatDate(job.postedDate)}
-                {job.category && ` · Category: ${job.category}`}
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-3">
-                {job.applicationLink ? (
-                  <a
-                    href={job.applicationLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-6 rounded text-center transition"
-                  >
-                    Apply Now →
-                  </a>
-                ) : (
-                  <button className="flex-1 bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-6 rounded transition">
-                    Apply Now
-                  </button>
-                )}
-                <Link
-                  href="/all-jobs"
-                  className="flex-1 border-2 border-green-700 text-green-700 hover:bg-green-50 font-bold py-3 px-6 rounded text-center transition"
+            <div className={styles.card}>
+              {/* Header */}
+              <div className={styles.cardHeader}>
+                <div className={styles.companyRow}>
+                  {logoUrl ? (
+                    <div className={styles.logoBox}>
+                      <Image
+                        src={logoUrl}
+                        alt={`${job.company} logo`}
+                        width={64}
+                        height={64}
+                        className={styles.logoImg}
+                      />
+                    </div>
+                  ) : (
+                    <div className={styles.logoPlaceholder}>
+                      {job.company.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <div>
+                    <h1 className={styles.jobTitle}>{job.title}</h1>
+                    <p className={styles.companyName}>{job.company}</p>
+                  </div>
+                </div>
+                <span
+                  className={styles.badge}
+                  style={{ background: badge.bg, color: badge.color }}
                 >
-                  Browse More Jobs
-                </Link>
+                  {badge.label}
+                </span>
+              </div>
+
+              {/* Quick Info Boxes */}
+              <div className={styles.infoBoxes}>
+                <div className={styles.infoBox}>
+                  <span className={styles.infoIcon}>📍</span>
+                  <div>
+                    <div className={styles.infoLabel}>Location</div>
+                    <div className={styles.infoValue}>{job.location}</div>
+                  </div>
+                </div>
+                {job.salary && (
+                  <div className={styles.infoBox}>
+                    <span className={styles.infoIcon}>💰</span>
+                    <div>
+                      <div className={styles.infoLabel}>Salary</div>
+                      <div className={styles.infoValue}>{job.salary}</div>
+                    </div>
+                  </div>
+                )}
+                {job.experience && (
+                  <div className={styles.infoBox}>
+                    <span className={styles.infoIcon}>🎓</span>
+                    <div>
+                      <div className={styles.infoLabel}>Experience</div>
+                      <div className={styles.infoValue}>{job.experience}</div>
+                    </div>
+                  </div>
+                )}
+                {job.deadline && (
+                  <div className={styles.infoBox}>
+                    <span className={styles.infoIcon}>🗓</span>
+                    <div>
+                      <div className={styles.infoLabel}>Deadline</div>
+                      <div className={styles.infoValue}>{formatDate(job.deadline)}</div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Description */}
+              <div className={styles.section}>
+                <h2 className={styles.sectionTitle}>Job Description</h2>
+                <p className={styles.sectionText}>{job.description}</p>
+              </div>
+
+              {job.qualifications && (
+                <div className={styles.section}>
+                  <h2 className={styles.sectionTitle}>Qualifications & Requirements</h2>
+                  <p className={styles.sectionText}>{job.qualifications}</p>
+                </div>
+              )}
+
+              {/* Footer Meta */}
+              <div className={styles.cardFooter}>
+                <p className={styles.postedMeta}>
+                  Posted: {formatDate(job.postedDate)}
+                  {job.category && ` · Category: ${job.category}`}
+                </p>
+                <div className={styles.actions}>
+                  {job.applicationLink ? (
+                    <a
+                      href={job.applicationLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.btnApply}
+                    >
+                      Apply Now →
+                    </a>
+                  ) : (
+                    <button className={styles.btnApply}>Apply Now</button>
+                  )}
+                  <Link href="/all-jobs" className={styles.btnBrowse}>
+                    Browse More Jobs
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
+          </main>
+
+          {/* Sidebar */}
+          <aside className={styles.sidebar}>
+            <div className={styles.sidebarCard}>
+              <h3 className={styles.sidebarTitle}>Quick Apply</h3>
+              <div className={styles.sidebarMeta}>
+                <span
+                  className={styles.sidebarBadge}
+                  style={{ background: badge.bg, color: badge.color }}
+                >
+                  {badge.label}
+                </span>
+                {job.salary && (
+                  <div className={styles.sidebarSalary}>{job.salary}</div>
+                )}
+                <div className={styles.sidebarInfoRow}>
+                  <span>📍</span> {job.location}
+                </div>
+                {job.experience && (
+                  <div className={styles.sidebarInfoRow}>
+                    <span>🎓</span> {job.experience}
+                  </div>
+                )}
+                <div className={styles.sidebarInfoRow}>
+                  <span>📅</span> Posted: {formatDate(job.postedDate)}
+                </div>
+              </div>
+              {job.applicationLink ? (
+                <a
+                  href={job.applicationLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.sidebarApplyBtn}
+                >
+                  Apply Now →
+                </a>
+              ) : (
+                <button className={styles.sidebarApplyBtn}>Apply Now</button>
+              )}
+              <Link href="/all-jobs" className={styles.sidebarBrowseBtn}>
+                Browse Similar Jobs
+              </Link>
+            </div>
+
+            <div className={styles.sidebarAlert}>
+              <div className={styles.alertTitle}>🔔 Get Job Alerts</div>
+              <p className={styles.alertText}>Never miss opportunities like this one.</p>
+              <Link href="/#subscribe" className={styles.alertBtn}>Subscribe Free</Link>
+            </div>
+          </aside>
         </div>
       </div>
     </div>
